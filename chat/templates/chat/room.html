@@ -1,50 +1,186 @@
-<!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8"/>
+  <head>
+    <meta charset="utf-8" />
     <title>Chat Room</title>
-</head>
-<body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
+    <style>
+      body {
+        background: linear-gradient(135deg, #62b0db, #65e2e8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      #container {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 80%;
+      }
+
+      #user-name-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+
+      #chat-input {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+
+      input[type="text"],
+      textarea {
+        border: none;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px;
+        color: #000;
+        width: 100%;
+      }
+
+      button {
+        background: #00b5e9;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        background: #0095c7;
+      }
+
+      #user-name-display {
+        color: rgb(0, 0, 0);
+        font-weight: bold;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      /* Track (the background of the scrollbar) */
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      /* Handle (the draggable part of the scrollbar) */
+      ::-webkit-scrollbar-thumb {
+        background: #3498db;
+        border-radius: 4px;
+      }
+
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2980b9;
+      }
+
+      @media (max-width: 768px) {
+        #container {
+          padding: 10px;
+        }
+
+        #chat-log {
+          width: 100%;
+        }
+
+        #chat-message-input {
+          width: 100%;
+        }
+
+        #chat-message-submit {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="user-name-form">
+        <input id="user-name-input" type="text" placeholder="Enter your name" />
+        <button id="submit-name-button" type="button">Submit Name</button>
+        <div id="user-name-display" style="display: none"></div>
+      </div>
+      <textarea id="chat-log" cols="100" rows="20"></textarea>
+      <div id="chat-input">
+        <input
+          id="chat-message-input"
+          type="text"
+          placeholder="Type your message"
+        />
+        <input id="chat-message-submit" type="button" value="Send" />
+      </div>
+    </div>
+
     {{ room_name|json_script:"room-name" }}
     <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+      // JavaScript code for handling user name submission
+      const userNameForm = document.querySelector("#user-name-form");
+      const userNameInput = document.querySelector("#user-name-input");
+      const userNameDisplay = document.querySelector("#user-name-display");
+      const submitNameButton = document.querySelector("#submit-name-button");
 
-        const chatSocket = new WebSocket(
-            'wss://'
-            + window.location.host
-            + '/ws/chat/'
-            + roomName
-            + '/'
+      let userName = "";
+      submitNameButton.addEventListener("click", function () {
+        userName = userNameInput.value;
+
+        // Display the user's name and hide the button
+        userNameDisplay.innerText = "User Name: " + userName;
+        userNameDisplay.style.display = "block";
+        submitNameButton.style.display = "none";
+      });
+
+      const roomName = JSON.parse(
+        document.getElementById("room-name").textContent
+      );
+      const chatSocket = new WebSocket(
+        "wss://" + window.location.host + "/ws/chat/" + roomName + "/"
+      );
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        document.querySelector("#chat-log").value +=
+          data.user + ":" + data.message + "\n";
+      };
+
+      chatSocket.onclose = function (e) {
+        console.error("Chat socket closed unexpectedly");
+      };
+
+      document.querySelector("#chat-message-input").focus();
+      document.querySelector("#chat-message-input").onkeyup = function (e) {
+        if (e.keyCode === 13) {
+          // enter, return
+          document.querySelector("#chat-message-submit").click();
+        }
+      };
+
+      document.querySelector("#chat-message-submit").onclick = function (e) {
+        const messageInputDom = document.querySelector("#chat-message-input");
+        const message = messageInputDom.value;
+        chatSocket.send(
+          JSON.stringify({
+            message: message,
+            sender: userName,
+          })
         );
-
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
-        };
-
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        };
+        messageInputDom.value = "";
+      };
     </script>
-</body>
+  </body>
 </html>

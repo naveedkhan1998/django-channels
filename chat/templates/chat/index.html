@@ -1,27 +1,92 @@
-<!-- chat/templates/chat/index.html -->
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8"/>
+  <head>
+    <meta charset="utf-8" />
     <title>Chat Rooms</title>
-</head>
-<body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+    <style>
+      body {
+        background: linear-gradient(135deg, #62b0db, #65e2e8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      #container {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 80%;
+      }
+
+      #user-name-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+        width: 100%; /* Added width to make it take full container width */
+      }
+
+      #chat-input {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%; /* Added width to make it take full container width */
+      }
+
+      input[type="text"],
+      textarea {
+        border: none;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px;
+        color: #000;
+        width: 100%;
+      }
+
+      button {
+        background: #00b5e9;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        background: #0095c7;
+      }
+
+      #user-name-display {
+        color: rgb(0, 0, 0);
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    What chat room would you like to enter?<br />
+    <input id="room-name-input" type="text" size="100" /><br />
+    <input id="room-name-submit" type="button" value="Enter" />
 
     <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
+      document.querySelector("#room-name-input").focus();
+      document.querySelector("#room-name-input").onkeyup = function (e) {
+        if (e.keyCode === 13) {
+          document.querySelector("#room-name-submit").click();
+        }
+      };
 
-        document.querySelector('#room-name-submit').onclick = function(e) {
-            var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
-        };
+      document.querySelector("#room-name-submit").onclick = function (e) {
+        var roomName = document.querySelector("#room-name-input").value;
+        window.location.pathname = "/chat/" + roomName + "/";
+      };
     </script>
-</body>
+  </body>
 </html>
