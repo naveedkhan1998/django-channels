@@ -1,92 +1,75 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8">
     <title>Chat Rooms</title>
     <style>
-      body {
-        background: linear-gradient(135deg, #62b0db, #65e2e8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(147, 149, 152, 0.66);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-      #container {
-        background: rgba(255, 255, 255, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 10px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-width: 80%;
-      }
+        #container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 150px 30px 30px 150px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
 
-      #user-name-form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 10px;
-        width: 100%; /* Added width to make it take full container width */
-      }
+        #instructions {
+            font-size: 18px;
+        }
 
-      #chat-input {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%; /* Added width to make it take full container width */
-      }
+        #room-name-input {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-      input[type="text"],
-      textarea {
-        border: none;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 5px;
-        padding: 10px;
-        margin: 5px;
-        color: #000;
-        width: 100%;
-      }
+        #room-name-submit {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
 
-      button {
-        background: #00b5e9;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        color: white;
-        cursor: pointer;
-        width: 100%;
-      }
-
-      button:hover {
-        background: #0095c7;
-      }
-
-      #user-name-display {
-        color: rgb(0, 0, 0);
-        font-weight: bold;
-      }
+        #room-name-submit:hover {
+            background-color: #0056b3;
+        }
     </style>
-  </head>
-  <body>
-    What chat room would you like to enter?<br />
-    <input id="room-name-input" type="text" size="100" /><br />
-    <input id="room-name-submit" type="button" value="Enter" />
+</head>
+<body>
+    <div id="container">
+        <div id="instructions">Enter the chat room name:</div>
+        <input id="room-name-input" type="text" autofocus />
+        <input id="room-name-submit" type="button" value="Enter" />
+    </div>
 
     <script>
-      document.querySelector("#room-name-input").focus();
-      document.querySelector("#room-name-input").onkeyup = function (e) {
-        if (e.keyCode === 13) {
-          document.querySelector("#room-name-submit").click();
-        }
-      };
+        const roomNameInput = document.querySelector("#room-name-input");
+        const roomNameSubmit = document.querySelector("#room-name-submit");
 
-      document.querySelector("#room-name-submit").onclick = function (e) {
-        var roomName = document.querySelector("#room-name-input").value;
-        window.location.pathname = "/chat/" + roomName + "/";
-      };
+        roomNameInput.addEventListener("keyup", function (e) {
+            if (e.keyCode === 13) {
+                roomNameSubmit.click();
+            }
+        });
+
+        roomNameSubmit.addEventListener("click", function () {
+            const roomName = roomNameInput.value;
+            window.location.pathname = `/chat/ws/${roomName}/`;
+        });
     </script>
-  </body>
+</body>
 </html>

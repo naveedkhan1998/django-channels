@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from . import settings
 urlpatterns = [
+    path("", TemplateView.as_view(template_name="chat/index.html"), name="index"),
     path('admin/', admin.site.urls),
     path("chat/", include("chat.urls")),
 ] \
