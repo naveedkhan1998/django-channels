@@ -9,11 +9,3 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:alpine
-    container_name: redis_container
-    ports:
-      - "6379:6379"
