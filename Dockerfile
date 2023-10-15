@@ -1,15 +1,15 @@
-# Use the Python Alpine image as the base image for the first stage
-FROM python:3.9-alpine AS builder
+# Use the official Python 3.9 image as the base image
+FROM python:3.9 AS builder
 
 # Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
-RUN apk add --no-cache --virtual .build-deps \
-    build-base \
+RUN apt-get update && apt-get install -y \
+    build-essential \
     libffi-dev \
-    openssl-dev
+    libssl-dev
 
 # Create and set the working directory
 WORKDIR /app
@@ -21,7 +21,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Final stage for the smaller image
-FROM python:3.9-alpine
+FROM python:3.9
 
 # Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
