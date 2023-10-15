@@ -1,10 +1,11 @@
 # chat/urls.py
 from django.urls import path
 
-from . import views
+from .views import index,room,SendMessageToWebSocket
 
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("<str:room_name>/", views.room, name="room"),
+    path("", index, name="index"),
+    path("ws/<str:room_name>/", room, name="room"),
+    path('send_message_to_websocket/<str:room_name>/', SendMessageToWebSocket.as_view(), name='send_message_to_websocket'),
 ]
