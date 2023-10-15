@@ -1,15 +1,15 @@
-# Use the official Python 3.9 image as the base image
-FROM python:3.9 AS builder
+# Use the Python Alpine image as the base image for the first stage
+FROM python:3.9-alpine AS builder
 
 # Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
     libffi-dev \
-    libssl-dev
+    openssl-dev
 
 # Create and set the working directory
 WORKDIR /app
@@ -21,7 +21,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Final stage for the smaller image
-FROM python:3.9
+FROM python:3.9-alpine
 
 # Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -39,5 +39,5 @@ COPY . .
 # Collect static files (if applicable)
 RUN python manage.py collectstatic --noinput
 
-# Start the application using the start.sh script
-CMD ["./start.sh"]
+# Run Django on all available network interfaces
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
