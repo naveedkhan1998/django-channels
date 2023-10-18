@@ -37,7 +37,7 @@ WORKDIR /app
 COPY . .
 
 # Collect static files (if applicable)
-RUN python manage.py collectstatic --noinput
+#RUN python manage.py collectstatic --noinput
 
 # Run Django on all available network interfaces
 #CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
