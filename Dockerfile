@@ -6,10 +6,12 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
-RUN apk add --no-cache --virtual .build-deps \
-    build-base \
-    libffi-dev \
-    openssl-dev
+RUN apk update && apk add --no-cache \
+    gcc \
+    musl-dev \
+    postgresql-dev \
+    libpq-dev \
+    openssl-dev 
 
 # Create and set the working directory
 WORKDIR /app
@@ -45,7 +47,7 @@ COPY . .
 # Copy your application code and any other necessary files from the builder stage
 
 #                                                               Start your Django application for server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
 
 #                                                                   For local
 #RUN chmod +x /app/start.sh

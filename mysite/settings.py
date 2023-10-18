@@ -120,10 +120,15 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mnk_free_postgres", 
+        "USER": "mnk_free_postgres_user", 
+        "PASSWORD": "N9OSyzdKogV1BlbVAdaNJ9BzywX2U0H0",  
+        "HOST": "dpg-cko1ns6jmi5c73bm0m2g-a.ohio-postgres.render.com", 
+        #"PORT": "5432",
+    },
 }
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = "static/"
