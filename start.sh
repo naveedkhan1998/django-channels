@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Collect static files (if applicable)
-RUN python manage.py collectstatic --noinput
-
 # wait for db
 python manage.py wait_for_db
 
