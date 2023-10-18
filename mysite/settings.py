@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import mimetypes
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-t9lf7=(@0gc1b0h=zh=bqpb98gh=s-9h6s4#*8qjdvo$w!h59=
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+CSRF_TRUSTED_ORIGIN = ['https://application-fc.18klajjho232.ca-tor.codeengine.appdomain.cloud']
 
 # Application definition
 
@@ -42,6 +43,8 @@ INSTALLED_APPS = [
     'channels_auth_token_middlewares',
     'rest_framework',
     'chat',
+    'convert',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -141,6 +144,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MAIN_URL = "https://application-fc.18klajjho232.ca-tor.codeengine.appdomain.cloud/"
+MAIN_URL_2 = "https://application-fc.18klajjho232.ca-tor.codeengine.appdomain.cloud"
+
+CORS_ALLOW_CREDENTIALS = True
+mimetypes.add_type("text/css", ".css", True)
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

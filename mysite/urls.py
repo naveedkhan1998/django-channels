@@ -23,6 +23,7 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="chat/index.html"), name="index"),
     path('admin/', admin.site.urls),
     path("chat/", include("chat.urls")),
+    path("convert/", include("convert.urls")),
 ] \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
