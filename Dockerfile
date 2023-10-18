@@ -42,5 +42,5 @@ RUN python manage.py collectstatic --noinput
 # Run Django on all available network interfaces
 #CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
 
-RUN chmod +x /app/start.sh
-ENTRYPOINT ["./start.sh"]
+#RUN chmod +x /app/start.sh
+#ENTRYPOINT ["./start.sh"]
