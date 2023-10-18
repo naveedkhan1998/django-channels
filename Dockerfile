@@ -26,25 +26,17 @@ COPY . .
 # Collect static files (if applicable)
 RUN python manage.py collectstatic --noinput
 
-# Final stage for the smaller image
-FROM python:3.9-alpine
+# Wait for the database to be ready
+RUN python manage.py wait_for_db
 
-# Set environment variables for Python
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Create new database migration files based on model changes
+RUN python manage.py makemigrations
 
-# Copy the built dependencies from the builder stage
-COPY --from=builder /usr/local /usr/local
+# Apply database migrations to the database
+RUN python manage.py migrate --noinput
 
-# Create and set the working directory
-WORKDIR /app
+# Create an admin user if it doesn't exist
+RUN python manage.py initadmin
 
-# Copy the current directory contents into the container
-COPY . .
-
-EXPOSE 8080
-# Copy your application code and any other necessary files from the builder stage
-
-# Run your application (e.g., using an entrypoint script)
-#RUN chmod +x /app/start.sh
-#ENTRYPOINT ["/app/start.sh"]
+# Start your Django application
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
