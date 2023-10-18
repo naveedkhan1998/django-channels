@@ -47,7 +47,7 @@ COPY . .
 # Copy your application code and any other necessary files from the builder stage
 
 #                                                               Start your Django application for server
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
 
 #                                                                   For local
 #RUN chmod +x /app/start.sh
