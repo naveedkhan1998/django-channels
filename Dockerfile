@@ -20,6 +20,12 @@ COPY requirements.txt .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy your application code into the container
+COPY . .
+
+# Collect static files (if applicable)
+RUN python manage.py collectstatic --noinput
+
 # Final stage for the smaller image
 FROM python:3.9-alpine
 
@@ -33,14 +39,12 @@ COPY --from=builder /usr/local /usr/local
 # Create and set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
+# Copy the current directory contents into the container
 COPY . .
 
-# Collect static files (if applicable)
-RUN python manage.py collectstatic --noinput
+EXPOSE 8080
+# Copy your application code and any other necessary files from the builder stage
 
-# Run Django on all available network interfaces
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
-
-RUN chmod +x /app/start.sh
-ENTRYPOINT ["./start.sh"]
+# Run your application (e.g., using an entrypoint script)
+#RUN chmod +x /app/start.sh
+#ENTRYPOINT ["/app/start.sh"]
