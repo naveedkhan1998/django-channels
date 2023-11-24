@@ -1,113 +1,76 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Chat Room</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: rgba(147, 149, 152, 0.66);
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
-
-      #container {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-      }
-
-      .input-container {
-        display: flex;
-        align-items: center;
-        width: 100%;
-      }
-
-      .input-container input {
-        flex: 1;
-        padding: 10px;
-        margin: 10px;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .button-container {
-        display: flex;
-        align-items: center;
-      }
-
-      .button-container button {
-        padding: 10px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        margin-left: 10px;
-      }
-
-      .button-container button:hover {
-        background-color: #0056b3;
-      }
-
-      #user-name-display {
-        display: none;
-        font-size: 18px;
-      }
-
-      #chat-log {
-        padding: 10px;
-        margin: 10px;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 100%;
-      }
-    </style>
+    {% tailwind_css %}
   </head>
-  <body>
-    <div id="container">
-      <div class="container" id="user-name-form">
-        <div class="input-container">
+  <body class="min-h-screen flex items-center justify-center bg-gray-700 mt-6">
+    <div
+      id="container"
+      class="container mx-auto bg-white rounded-2xl shadow-md p-4"
+    >
+      <!-- Username Modal -->
+      <div
+        id="username-modal"
+        class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center"
+        aria-labelledby="username-modal-title"
+        aria-describedby="username-modal-description"
+      >
+        <div class="bg-white p-6 rounded-md">
+          <h2 id="username-modal-title" class="text-2xl font-semibold mb-4">
+            Enter Your Name
+          </h2>
           <input
             id="user-name-input"
             type="text"
-            placeholder="Enter your name"
+            placeholder="Your Name"
+            class="p-2 border rounded-md mb-4"
+            aria-label="Your Name"
           />
+          <button
+            id="submit-name-button"
+            type="submit"
+            class="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            Submit Name
+          </button>
         </div>
-        <div class="button-container">
-          <button id="submit-name-button" type="button">Submit Name</button>
-        </div>
-        <div id="user-name-display"></div>
       </div>
-      <textarea id="chat-log" cols="100" rows="20"></textarea>
-      <div class="container" id="chat-input">
-        <div class="input-container">
-          <input
-            id="chat-message-input"
-            type="text"
-            placeholder="Type your message"
-          />
-        </div>
-        <div class="button-container">
-          <input id="chat-message-submit" type="button" value="Send" />
+
+      <!-- Chat Room Content -->
+      <div id="chat-room-content" class="hidden">
+        <div
+          id="user-name-display"
+          class="bg-gray-300 rounded-md mb-4 text-3xl p-2"
+        ></div>
+        <textarea
+          id="chat-log"
+          cols="100"
+          rows="20"
+          class="mt-4 p-2 border rounded-md w-full"
+          aria-label="Chat Log"
+        ></textarea>
+
+        <div id="chat-input" class="mt-4">
+          <div class="flex flex-col space-y-4">
+            <input
+              id="chat-message-input"
+              type="text"
+              placeholder="Type your message"
+              class="p-2 border rounded-md"
+              aria-label="Type your message"
+            />
+            <button
+              id="chat-message-submit"
+              type='submit'
+              class="px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -115,19 +78,21 @@
     {{ room_name|json_script:"room-name" }}
     <script>
       // JavaScript code for handling user name submission
-      const userNameForm = document.querySelector("#user-name-form");
+      const userNameModal = document.getElementById("username-modal");
       const userNameInput = document.querySelector("#user-name-input");
-      const userNameDisplay = document.querySelector("#user-name-display");
       const submitNameButton = document.querySelector("#submit-name-button");
+      const chatRoomContent = document.getElementById("chat-room-content");
+      const userNameDisplay = document.querySelector("#user-name-display");
 
       let userName = "";
+
       submitNameButton.addEventListener("click", function () {
         userName = userNameInput.value;
 
-        // Display the user's name and hide the button
-        userNameDisplay.innerText = "User Name: " + userName;
-        userNameDisplay.style.display = "block";
-        submitNameButton.style.display = "none";
+        // Display the user's name and hide the modal
+        userNameDisplay.innerText = "User Name : " + userName;
+        userNameModal.style.display = "none";
+        chatRoomContent.style.display = "block";
       });
 
       const roomName = JSON.parse(
@@ -167,6 +132,11 @@
           })
         );
         messageInputDom.value = "";
+      };
+
+      // Show the username modal on page load
+      window.onload = function () {
+        userNameModal.style.display = "flex";
       };
     </script>
   </body>

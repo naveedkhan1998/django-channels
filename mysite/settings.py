@@ -48,8 +48,22 @@ INSTALLED_APPS = [
     "chat",
     "convert",
     "home",
-    "api",
+    'tailwind',
+    'theme',
+    'django_browser_reload'
+
 ]
+
+TAILWIND_APP_NAME = 'theme'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+
+NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
+
+#NPM_BIN_PATH ='C:/Users/navee/AppData/Roaming/npm/node_modules/npm/bin'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -61,6 +75,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "mysite.urls"
@@ -119,16 +134,25 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mnk_free_postgres", 
-        "USER": "mnk_free_postgres_user", 
-        "PASSWORD": "N9OSyzdKogV1BlbVAdaNJ9BzywX2U0H0",  
-        "HOST": "dpg-cko1ns6jmi5c73bm0m2g-a.ohio-postgres.render.com", 
-        #"PORT": "5432",
+        "NAME": "mnk_free_postgres",
+        "USER": "mnk_free_postgres_user",
+        "PASSWORD": "N9OSyzdKogV1BlbVAdaNJ9BzywX2U0H0",
+        "HOST": "dpg-cko1ns6jmi5c73bm0m2g-a.ohio-postgres.render.com",
+        # "PORT": "5432",
     },
 }
+ """
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
+    }
+}
+
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")

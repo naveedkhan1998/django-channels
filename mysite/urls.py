@@ -19,13 +19,16 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from . import settings
-urlpatterns = [
-    path("", TemplateView.as_view(template_name="chat/index.html"), name="index"),
-    path('admin/', admin.site.urls),
-    path("chat/", include("chat.urls")),
-    path("convert/", include("convert.urls")),
-    path("api/", include("api.urls")),
-] \
-              + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
-              + static(settings.OUTPUT_URL, document_root=settings.OUTPUT_ROOT)
+
+urlpatterns = (
+    [
+        path("", TemplateView.as_view(template_name="chat/index.html"), name="index"),
+        path("admin/", admin.site.urls),
+        path("chat/", include("chat.urls")),
+        path("convert/", include("convert.urls")),
+        path("__reload__/", include("django_browser_reload.urls")),
+    ]
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.OUTPUT_URL, document_root=settings.OUTPUT_ROOT)
+)
