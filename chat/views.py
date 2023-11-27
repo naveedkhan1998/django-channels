@@ -6,8 +6,12 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import  AllowAny
+from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
+from .serializers import EmailLinkSerializer
+from rest_framework import status
+from .utils import Util
+
 
 def index(request):
     return render(request, "chat/index.html")
@@ -39,3 +43,23 @@ class SendMessageToWebSocket(APIView):
             {"error": "Both 'message' and 'user' parameters are required."}, status=400
         )
 
+
+@permission_classes([AllowAny])
+class EmailHandler(APIView):
+    def get(self, request):
+        chat_url = request.GET.get("chat_url")
+        seller_email = request.GET.get("seller_email")
+
+        if chat_url and seller_email:
+            data = {
+                "subject": "Chat Link",
+                "body": f"Link to start Chat: {chat_url}",
+                "to_email": seller_email,
+            }
+            Util.send_email(data)
+            return Response({"message": "Email sent."}, status=200)
+        else:
+            return Response(
+                {"error": "Missing required parameters {chat_url,seller_email}"},
+                status=400,
+            )

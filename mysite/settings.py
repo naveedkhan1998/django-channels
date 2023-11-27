@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "chat",
     "convert",
     "home",
+    "register",
     'tailwind',
     'theme',
     'django_browser_reload'
@@ -64,6 +65,16 @@ INTERNAL_IPS = [
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 #NPM_BIN_PATH ='C:/Users/navee/AppData/Roaming/npm/node_modules/npm/bin'
+
+# email config
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_USER", "dtemplarsarsh@gmail.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", "felrivmvhkybxigr")
+EMAIL_USE_TLS = True
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

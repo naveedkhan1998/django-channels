@@ -2,8 +2,9 @@ import json
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-
 class ChatConsumer(AsyncWebsocketConsumer):
+    connected_users = set()  # Set to store unique user IDs
+
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "chat_%s" % self.room_name
@@ -17,6 +18,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     self.room_group_name, self.channel_name
                 )
 
+                # Add the user ID to the set of connected users
+                user = self.scope["user"]
+                self.connected_users.add(user.id)
+
                 await self.accept()
                 return
             except Exception as e:
@@ -28,6 +33,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.close()
 
     async def disconnect(self, close_code):
+        # Remove the user ID from the set of connected users
+        user = self.scope["user"]
+        self.connected_users.discard(user.id)
+
         # Leave room group
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
